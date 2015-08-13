@@ -28,6 +28,14 @@
 
 			return (md5($this->api_shared_secret.implode('', $params)) === $signature);
 		}
+		public function validateHmac($str, $hmac_signature) {
+			$calculated_hmac = base64_encode(hash_hmac('sha256', $str, $this->api_shared_secret, true));
+
+			if ($calculated_hmac == $hmac_signature) {
+				return true;
+			}
+			return false;
+		}
 		public function call($method, $endpoint, $data = array()) {
 			if (empty($this->access_token)) {
 				throw new AuthenticationException('Access token not set');
